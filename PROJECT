@@ -1,0 +1,18 @@
+# Kubebuilder project metadata; `kubebuilder create api` reads it.
+cliVersion: 4.16.0
+domain: wutz.dev
+layout:
+- go.kubebuilder.io/v4
+projectName: fileserver-operator
+repo: github.com/wutz/fileserver-operator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: wutz.dev
+  group: forgeai
+  kind: FileServer
+  path: github.com/wutz/fileserver-operator/api/v1alpha1
+  version: v1alpha1
+version: "3"
