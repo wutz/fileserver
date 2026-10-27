@@ -1,0 +1,14 @@
+apiVersion: v2
+name: fileserver-operator
+description: Kubernetes operator that serves the volumes of a project with dufs, on demand
+home: https://github.com/wutz/fileserver-operator
+sources:
+  - https://github.com/wutz/fileserver-operator
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - kubernetes
+  - operator
+  - file-server
+  - dufs

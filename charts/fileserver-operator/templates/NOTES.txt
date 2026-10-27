@@ -1,0 +1,15 @@
+fileserver-operator {{ .Chart.AppVersion }} is installed in namespace {{ .Release.Namespace }}.
+
+Each namespace gets a FileServer named "default" from its client. The file
+server is served at:
+
+  {{- if .Values.config.ingress.domain }}
+  https://{{ .Values.config.fileServer.hostPrefix }}<namespace>.{{ .Values.config.ingress.domain }}{{ if and .Values.config.ingress.port (ne (int .Values.config.ingress.port) 443) }}:{{ .Values.config.ingress.port }}{{ end }}
+  {{- else }}
+  Not published: set config.ingress.domain to publish the file servers.
+  {{- end }}
+
+Check the operator:
+
+  kubectl -n {{ .Release.Namespace }} get deployment {{ include "fileserver-operator.fullname" . }}
+  kubectl get fileservers.forgeai.wutz.dev -A

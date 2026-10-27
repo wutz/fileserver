@@ -1,0 +1,54 @@
+# Default values for fileserver-operator.
+
+image:
+  repository: ghcr.io/wutz/fileserver-operator
+  # Defaults to the chart appVersion.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+replicas: 1
+
+# Leader election is only needed when running more than one replica.
+leaderElection: false
+
+# Extra arguments for the manager binary.
+extraArgs: []
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    memory: 256Mi
+
+imagePullSecrets: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+podLabels: {}
+
+# The operator configuration, rendered to the ConfigMap read at startup.
+config:
+  ingress:
+    # Ingress class of the file server Ingresses; empty uses the cluster default.
+    className: nginx
+    # Wildcard DNS suffix, e.g. dev1.example.com. The file servers are served
+    # at <hostPrefix><namespace>.<domain>. Empty means the file servers are
+    # not published, and their status reports Failed.
+    domain: ""
+    # External HTTPS port of the ingress; 443 is left out of the URLs.
+    port: 443
+    # Optional TLS Secret in each file server namespace; empty uses the
+    # ingress controller's default certificate.
+    tlsSecret: ""
+  fileServer:
+    # The dufs image that serves the volumes.
+    image: docker.io/sigoden/dufs:v0.46.0
+    # A file server is scaled to zero after this long without activity.
+    idleTimeout: 30m
+    # Prefix of the file server host name.
+    hostPrefix: files-
