@@ -12,4 +12,4 @@ server is served at:
 Check the operator:
 
   kubectl -n {{ .Release.Namespace }} get deployment {{ include "fileserver-operator.fullname" . }}
-  kubectl get fileservers.forgeai.wutz.dev -A
+  kubectl get fileservers.fileserver.wutz.dev -A

@@ -8,7 +8,7 @@ volumes cost no compute.
 - Serves every `ReadWriteMany` PersistentVolumeClaim of a namespace (or a
   listed subset) under `/<claim name>`, read-write, behind basic auth.
 - Scales the server to zero after `idleTimeout` without activity. Activity
-  is a client heartbeat (the `forgeai.wutz.dev/last-active` annotation) or a
+  is a client heartbeat (the `fileserver.wutz.dev/last-active` annotation) or a
   request seen in the dufs access log.
 - Publishes each server at `https://<prefix><namespace>.<domain>` through an
   Ingress, with large uploads allowed and streamed.
@@ -20,7 +20,7 @@ The operator is published as a Helm chart and a container image:
 
 ```bash
 helm install fileserver-operator oci://ghcr.io/wutz/charts/fileserver-operator \
-  --version 0.1.0 \
+  --version 0.2.0 \
   --namespace fileserver-operator-system --create-namespace \
   --set config.ingress.domain=files.example.com
 ```
@@ -52,18 +52,18 @@ for every value.
 
 ## The FileServer resource
 
-`FileServer` is in the `forgeai.wutz.dev/v1alpha1` group, short name `ffs`.
+`FileServer` is in the `fileserver.wutz.dev/v1alpha1` group, short name `ffs`.
 A client creates one named `default` in each namespace it serves.
 
 ```yaml
-apiVersion: forgeai.wutz.dev/v1alpha1
+apiVersion: fileserver.wutz.dev/v1alpha1
 kind: FileServer
 metadata:
   name: default
   namespace: my-project
   annotations:
     # Heartbeat: keeps the server running while this time is recent.
-    forgeai.wutz.dev/last-active: "2026-10-27T08:00:00Z"
+    fileserver.wutz.dev/last-active: "2026-10-27T08:00:00Z"
 spec:
   # Optional: serve only these claims. Empty serves every live ReadWriteMany claim.
   volumes: []
@@ -82,12 +82,13 @@ All of them are owned by the `FileServer`, so deleting it removes them.
 
 ## Compatibility
 
-The API group, the heartbeat annotation, the trash label, the Secret and object
-names, and the `app.kubernetes.io/managed-by=forgeai` labels are kept from the
-forgeai platform. A file server that forgeai created before this operator was
-split out is adopted on upgrade: the operator re-applies its Deployment, Service,
-Ingress and Secret under its own field manager, so the existing objects are
-updated in place rather than duplicated.
+The trash label, the Secret and object names, and the `app.kubernetes.io/managed-by=forgeai`
+labels are kept from the forgeai platform. From 0.2.0 the API group is
+`fileserver.wutz.dev`. The upgrade removes the 0.1.0 CRD `fileservers.forgeai.wutz.dev`,
+which deletes the FileServers it held. The Deployment, Service, Ingress and Secret that
+those FileServers owned are garbage-collected with them, so they are recreated rather
+than updated in place, and the Secret gets a newly generated password. forgeai
+recreates the `default` FileServer on the next use of the Files view.
 
 ## Development
 

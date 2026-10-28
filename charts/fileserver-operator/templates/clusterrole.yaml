@@ -46,7 +46,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - forgeai.wutz.dev
+  - fileserver.wutz.dev
   resources:
   - fileservers
   verbs:
@@ -58,13 +58,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - forgeai.wutz.dev
+  - fileserver.wutz.dev
   resources:
   - fileservers/finalizers
   verbs:
   - update
 - apiGroups:
-  - forgeai.wutz.dev
+  - fileserver.wutz.dev
   resources:
   - fileservers/status
   verbs:

@@ -63,7 +63,7 @@ const (
 	componentFileServer = "fileserver"
 	kindSecret          = "Secret"
 	// annotationServedVolumes on the pod template restarts dufs when volumes change.
-	annotationServedVolumes = "forgeai.wutz.dev/volumes"
+	annotationServedVolumes = "fileserver.wutz.dev/volumes"
 	// rootVolumeName is the scratch emptyDir at /data; the volumes are mounted under it.
 	rootVolumeName = "root"
 	// fileServerContainer is the dufs container, also the name of its binary.
@@ -86,9 +86,9 @@ type FileServerReconciler struct {
 	Now      func() time.Time
 }
 
-// +kubebuilder:rbac:groups=forgeai.wutz.dev,resources=fileservers,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=forgeai.wutz.dev,resources=fileservers/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=forgeai.wutz.dev,resources=fileservers/finalizers,verbs=update
+// +kubebuilder:rbac:groups=fileserver.wutz.dev,resources=fileservers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=fileserver.wutz.dev,resources=fileservers/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=fileserver.wutz.dev,resources=fileservers/finalizers,verbs=update
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups="",resources=services;secrets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
