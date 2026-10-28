@@ -1,4 +1,4 @@
-module github.com/wutz/fileserver-operator
+module github.com/wutz/fileserver
 
 go 1.26.0
 

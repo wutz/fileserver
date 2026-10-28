@@ -25,7 +25,7 @@ import (
 )
 
 // fieldOwner is the server-side apply field manager of the operator.
-const fieldOwner = client.FieldOwner("fileserver-operator")
+const fieldOwner = client.FieldOwner("fileserver")
 
 // apply server-side applies obj (typed or unstructured) as the operator field owner.
 func apply(ctx context.Context, c client.Client, obj client.Object) error {

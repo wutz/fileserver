@@ -1,4 +1,4 @@
-fileserver-operator {{ .Chart.AppVersion }} is installed in namespace {{ .Release.Namespace }}.
+fileserver {{ .Chart.AppVersion }} is installed in namespace {{ .Release.Namespace }}.
 
 Each namespace gets a FileServer named "default" from its client. The file
 server is served at:
@@ -11,5 +11,5 @@ server is served at:
 
 Check the operator:
 
-  kubectl -n {{ .Release.Namespace }} get deployment {{ include "fileserver-operator.fullname" . }}
+  kubectl -n {{ .Release.Namespace }} get deployment {{ include "fileserver.fullname" . }}
   kubectl get fileservers.fileserver.wutz.dev -A

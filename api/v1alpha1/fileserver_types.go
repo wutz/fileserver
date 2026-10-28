@@ -24,7 +24,7 @@ import (
 // FileServerSpec defines the desired state of FileServer.
 type FileServerSpec struct {
 	// volumes lists the PVCs to serve. Empty serves every ReadWriteMany volume
-	// of the namespace that is not in the trash.
+	// of the namespace that does not carry the fileserver.wutz.dev/ignore label.
 	// +optional
 	Volumes []string `json:"volumes,omitempty"`
 	// idleTimeout stops the server after no activity for this long. Defaults

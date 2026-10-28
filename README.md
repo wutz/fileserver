@@ -1,4 +1,4 @@
-# fileserver-operator
+# fileserver
 
 A Kubernetes operator that serves the volumes of a namespace over HTTPS with
 [dufs](https://github.com/sigoden/dufs), on demand. A `FileServer` runs one
@@ -12,16 +12,16 @@ volumes cost no compute.
   request seen in the dufs access log.
 - Publishes each server at `https://<prefix><namespace>.<domain>` through an
   Ingress, with large uploads allowed and streamed.
-- Skips volumes in the trash (the `forgeai.wutz.dev/trash=true` label).
+- Skips volumes labelled `fileserver.wutz.dev/ignore=true`, so clients can keep a volume out of every file server.
 
 ## Install
 
 The operator is published as a Helm chart and a container image:
 
 ```bash
-helm install fileserver-operator oci://ghcr.io/wutz/charts/fileserver-operator \
-  --version 0.2.0 \
-  --namespace fileserver-operator-system --create-namespace \
+helm install fileserver oci://ghcr.io/wutz/charts/fileserver \
+  --version 0.3.0 \
+  --namespace fileserver-system --create-namespace \
   --set config.ingress.domain=files.example.com
 ```
 
@@ -43,11 +43,11 @@ reads at startup and reloads when it changes.
 | `config.fileServer.image` | `docker.io/sigoden/dufs:v0.46.0` | The dufs image. |
 | `config.fileServer.idleTimeout` | `30m` | Scale-to-zero timeout when a `FileServer` does not set its own. |
 | `config.fileServer.hostPrefix` | `files-` | Prefix of the file server host name. |
-| `image.repository` / `image.tag` | `ghcr.io/wutz/fileserver-operator` / chart `appVersion` | Operator image. |
+| `image.repository` / `image.tag` | `ghcr.io/wutz/fileserver` / chart `appVersion` | Operator image. |
 | `replicas` | `1` | Operator replicas. Use more than one with `leaderElection: true`. |
 | `leaderElection` | `false` | Enable leader election. |
 
-See [`charts/fileserver-operator/values.yaml`](charts/fileserver-operator/values.yaml)
+See [`charts/fileserver/values.yaml`](charts/fileserver/values.yaml)
 for every value.
 
 ## The FileServer resource
@@ -82,13 +82,19 @@ All of them are owned by the `FileServer`, so deleting it removes them.
 
 ## Compatibility
 
-The trash label, the Secret and object names, and the `app.kubernetes.io/managed-by=forgeai`
-labels are kept from the forgeai platform. From 0.2.0 the API group is
-`fileserver.wutz.dev`. The upgrade removes the 0.1.0 CRD `fileservers.forgeai.wutz.dev`,
-which deletes the FileServers it held. The Deployment, Service, Ingress and Secret that
-those FileServers owned are garbage-collected with them, so they are recreated rather
-than updated in place, and the Secret gets a newly generated password. forgeai
-recreates the `default` FileServer on the next use of the Files view.
+The Secret and object names, and the `app.kubernetes.io/managed-by=forgeai` labels are
+kept from the forgeai platform. From 0.2.0 the API group is `fileserver.wutz.dev`.
+
+From 0.3.0 the project is named `fileserver`: the chart, the image, the Go module and the
+default namespace `fileserver-system`. The ignore label is `fileserver.wutz.dev/ignore=true`;
+it replaces `forgeai.wutz.dev/trash`, which the operator no longer reads. forgeai sets the
+new label on the volumes it trashes and relabels the ones trashed before 0.3.0.
+
+Because the chart was renamed, `fileserver-operator` 0.2.0 cannot be upgraded in place.
+Uninstall the `fileserver-operator` release first. That deletes its CRD, so it also deletes
+every FileServer, and the Deployment, Service, Ingress and Secret those FileServers owned are
+garbage-collected with them. Then install the `fileserver` chart. The Secret gets a newly
+generated password, and forgeai recreates the `default` FileServer on the next use of the Files view.
 
 ## Development
 
@@ -109,8 +115,8 @@ from is passed with `--config-namespace` (or the `POD_NAMESPACE` environment
 variable inside a cluster).
 
 Releases: pushing a `vX.Y.Z` tag publishes the image
-`ghcr.io/wutz/fileserver-operator:X.Y.Z` and the chart
-`oci://ghcr.io/wutz/charts/fileserver-operator:X.Y.Z`.
+`ghcr.io/wutz/fileserver:X.Y.Z` and the chart
+`oci://ghcr.io/wutz/charts/fileserver:X.Y.Z`.
 
 ## License
 

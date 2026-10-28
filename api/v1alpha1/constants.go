@@ -28,7 +28,8 @@ const (
 	// AnnotationLastActive is a client heartbeat on a FileServer (RFC3339).
 	// The file server runs while the heartbeat is recent.
 	AnnotationLastActive = "fileserver.wutz.dev/last-active"
-	// LabelTrash marks a PersistentVolumeClaim as trashed, with the value
-	// "true". Trashed volumes are not served.
-	LabelTrash = "forgeai.wutz.dev/trash"
+	// LabelIgnore marks a PersistentVolumeClaim that file servers must not serve,
+	// with the value "true". Clients set it on volumes they trash; the operator
+	// does not serve them.
+	LabelIgnore = "fileserver.wutz.dev/ignore"
 )

@@ -43,9 +43,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/metrics/filters"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
-	v1 "github.com/wutz/fileserver-operator/api/v1alpha1"
-	"github.com/wutz/fileserver-operator/internal/config"
-	"github.com/wutz/fileserver-operator/internal/controller"
+	v1 "github.com/wutz/fileserver/api/v1alpha1"
+	"github.com/wutz/fileserver/internal/config"
+	"github.com/wutz/fileserver/internal/controller"
 )
 
 var (
@@ -117,7 +117,7 @@ func main() {
 
 	// Cache only the managed instances of the high-volume kinds, and only the
 	// config ConfigMap of the operator namespace. Pods and PVCs are cached in
-	// full because the volume trash and instance activity need all of them.
+	// full because the volume ignore labels and instance activity need all of them.
 	managed := cache.ByObject{Label: labels.SelectorFromSet(labels.Set{
 		"app.kubernetes.io/managed-by": "forgeai",
 	})}
@@ -139,7 +139,7 @@ func main() {
 		Metrics:                metricsServerOptions,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "fileserver-operator.wutz.dev",
+		LeaderElectionID:       "fileserver.wutz.dev",
 	})
 	if err != nil {
 		setupLog.Error(err, "Failed to start manager")

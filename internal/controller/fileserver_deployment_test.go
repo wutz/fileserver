@@ -23,8 +23,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	v1 "github.com/wutz/fileserver-operator/api/v1alpha1"
-	"github.com/wutz/fileserver-operator/internal/config"
+	v1 "github.com/wutz/fileserver/api/v1alpha1"
+	"github.com/wutz/fileserver/internal/config"
 )
 
 // The image has no shell, so dufs must be started directly. The root emptyDir

@@ -45,8 +45,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	v1 "github.com/wutz/fileserver-operator/api/v1alpha1"
-	"github.com/wutz/fileserver-operator/internal/config"
+	v1 "github.com/wutz/fileserver/api/v1alpha1"
+	"github.com/wutz/fileserver/internal/config"
 )
 
 const (
@@ -251,11 +251,11 @@ func conditionStatus(b bool) metav1.ConditionStatus {
 	return metav1.ConditionFalse
 }
 
-// inTrash reports whether a claim is in the trash, which is not served.
-func inTrash(pvc *corev1.PersistentVolumeClaim) bool { return pvc.Labels[v1.LabelTrash] == "true" }
+// ignored reports whether a claim carries the ignore label, which keeps it from being served.
+func ignored(pvc *corev1.PersistentVolumeClaim) bool { return pvc.Labels[v1.LabelIgnore] == "true" }
 
 // volumes returns the PVCs to serve: the listed ones or every live
-// ReadWriteMany volume, skipping trashed and missing claims.
+// ReadWriteMany volume, skipping ignored and missing claims.
 func (r *FileServerReconciler) volumes(ctx context.Context, fs *v1.FileServer) ([]string, error) {
 	list := &corev1.PersistentVolumeClaimList{}
 	if err := r.List(ctx, list, client.InNamespace(fs.Namespace)); err != nil {
@@ -264,7 +264,7 @@ func (r *FileServerReconciler) volumes(ctx context.Context, fs *v1.FileServer) (
 	out := []string{}
 	for i := range list.Items {
 		pvc := &list.Items[i]
-		if inTrash(pvc) || !pvc.DeletionTimestamp.IsZero() {
+		if ignored(pvc) || !pvc.DeletionTimestamp.IsZero() {
 			continue
 		}
 		if len(fs.Spec.Volumes) > 0 {
