@@ -1,5 +1,5 @@
 # Image URL to use all building/pushing image targets
-IMG ?= ghcr.io/wutz/fileserver-operator:latest
+IMG ?= ghcr.io/wutz/fileserver:latest
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -12,7 +12,7 @@ endif
 CONTAINER_TOOL ?= docker
 
 # CONFIG_NAMESPACE is where `make run` reads the operator config ConfigMap.
-CONFIG_NAMESPACE ?= fileserver-operator-system
+CONFIG_NAMESPACE ?= fileserver-system
 
 # Setting SHELL to bash allows bash commands to be executed by recipes.
 SHELL = /usr/bin/env bash -o pipefail
@@ -76,8 +76,8 @@ docker-push: ## Push the manager image.
 ##@ Helm
 
 HELM ?= helm
-CHART_DIR ?= charts/fileserver-operator
-CHART_VERSION ?= 0.2.0
+CHART_DIR ?= charts/fileserver
+CHART_VERSION ?= 0.3.0
 CHART_REPO ?= oci://ghcr.io/wutz/charts
 
 .PHONY: helm-lint
@@ -86,7 +86,7 @@ helm-lint: ## Lint the Helm chart.
 
 .PHONY: helm-template
 helm-template: ## Render the Helm chart with its default values.
-	$(HELM) template fileserver-operator $(CHART_DIR) --namespace fileserver-operator-system
+	$(HELM) template fileserver $(CHART_DIR) --namespace fileserver-system
 
 .PHONY: helm-package
 helm-package: ## Package the Helm chart into dist/.
@@ -95,7 +95,7 @@ helm-package: ## Package the Helm chart into dist/.
 
 .PHONY: helm-push
 helm-push: ## Push the packaged Helm chart to the OCI registry.
-	$(HELM) push dist/fileserver-operator-$(CHART_VERSION).tgz $(CHART_REPO)
+	$(HELM) push dist/fileserver-$(CHART_VERSION).tgz $(CHART_REPO)
 
 ##@ Build dependencies
 

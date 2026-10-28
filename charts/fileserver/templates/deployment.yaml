@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fileserver-operator.fullname" . }}
+  name: {{ include "fileserver.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "fileserver-operator.labels" . | nindent 4 }}
+    {{- include "fileserver.labels" . | nindent 4 }}
     control-plane: controller-manager
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      {{- include "fileserver-operator.selectorLabels" . | nindent 6 }}
+      {{- include "fileserver.selectorLabels" . | nindent 6 }}
   # Only one manager may run without leader election, so replace it in place.
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        {{- include "fileserver-operator.labels" . | nindent 8 }}
+        {{- include "fileserver.labels" . | nindent 8 }}
         control-plane: controller-manager
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
@@ -27,7 +27,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      serviceAccountName: {{ include "fileserver-operator.fullname" . }}
+      serviceAccountName: {{ include "fileserver.fullname" . }}
       securityContext:
         runAsNonRoot: true
         seccompProfile:
@@ -43,7 +43,7 @@ spec:
           args:
             - --metrics-bind-address=0
             - --health-probe-bind-address=:8081
-            - --config-name={{ include "fileserver-operator.configMapName" . }}
+            - --config-name={{ include "fileserver.configMapName" . }}
             - --leader-elect={{ .Values.leaderElection }}
             {{- with .Values.extraArgs }}
             {{- toYaml . | nindent 12 }}

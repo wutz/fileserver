@@ -3,8 +3,8 @@ cliVersion: 4.16.0
 domain: wutz.dev
 layout:
 - go.kubebuilder.io/v4
-projectName: fileserver-operator
-repo: github.com/wutz/fileserver-operator
+projectName: fileserver
+repo: github.com/wutz/fileserver
 resources:
 - api:
     crdVersion: v1
@@ -13,6 +13,6 @@ resources:
   domain: wutz.dev
   group: fileserver
   kind: FileServer
-  path: github.com/wutz/fileserver-operator/api/v1alpha1
+  path: github.com/wutz/fileserver/api/v1alpha1
   version: v1alpha1
 version: "3"

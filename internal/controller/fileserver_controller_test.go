@@ -31,8 +31,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	v1 "github.com/wutz/fileserver-operator/api/v1alpha1"
-	"github.com/wutz/fileserver-operator/internal/config"
+	v1 "github.com/wutz/fileserver/api/v1alpha1"
+	"github.com/wutz/fileserver/internal/config"
 )
 
 const (
@@ -49,7 +49,7 @@ func getObject(obj client.Object, name string) func() error {
 	return func() error { return k8sClient.Get(ctx, client.ObjectKey{Namespace: testNS, Name: name}, obj) }
 }
 
-func createVolume(name string, trashed bool) {
+func createVolume(name string, ignored bool) {
 	pvc := &corev1.PersistentVolumeClaim{
 		ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: testNS},
 		Spec: corev1.PersistentVolumeClaimSpec{
@@ -59,8 +59,8 @@ func createVolume(name string, trashed bool) {
 			}},
 		},
 	}
-	if trashed {
-		pvc.Labels = map[string]string{v1.LabelTrash: "true"}
+	if ignored {
+		pvc.Labels = map[string]string{v1.LabelIgnore: "true"}
 	}
 	Expect(k8sClient.Create(ctx, pvc)).To(Succeed())
 }
@@ -174,7 +174,7 @@ var _ = Describe("FileServer", Ordered, func() {
 		Eventually(getObject(&networkingv1.Ingress{}, ingressName), specTimeout, specInterval).Should(Succeed())
 	})
 
-	It("stops serving a volume once it is trashed", func() {
+	It("stops serving a volume once it is ignored", func() {
 		createVolume("shared", false)
 		dep := &appsv1.Deployment{}
 		Eventually(func() string {
@@ -205,7 +205,7 @@ var _ = Describe("FileServer", Ordered, func() {
 		if pvc.Labels == nil {
 			pvc.Labels = map[string]string{}
 		}
-		pvc.Labels[v1.LabelTrash] = "true"
+		pvc.Labels[v1.LabelIgnore] = "true"
 		Expect(k8sClient.Update(ctx, pvc)).To(Succeed())
 		Eventually(func() string {
 			if getObject(dep, deployment)() != nil {

@@ -38,14 +38,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
-	v1 "github.com/wutz/fileserver-operator/api/v1alpha1"
-	"github.com/wutz/fileserver-operator/internal/config"
+	v1 "github.com/wutz/fileserver/api/v1alpha1"
+	"github.com/wutz/fileserver/internal/config"
 )
 
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to
 // http://onsi.github.io/ginkgo/ to learn more about Ginkgo.
 
-const configNamespace = "fileserver-operator-system"
+const configNamespace = "fileserver-system"
 
 const testConfig = `
 ingress: {className: nginx, domain: example.com, port: 7443}

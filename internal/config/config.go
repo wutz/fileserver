@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 // Package config is the operator's own configuration, read from a ConfigMap.
-// The Helm chart renders it from the chart values; see charts/fileserver-operator.
+// The Helm chart renders it from the chart values; see charts/fileserver.
 package config
 
 import (
@@ -35,7 +35,7 @@ const (
 	// ConfigKey is the key of the ConfigMap that holds the YAML document.
 	ConfigKey = "config.yaml"
 	// DefaultConfigMapName is the ConfigMap read when none is given.
-	DefaultConfigMapName = "fileserver-operator"
+	DefaultConfigMapName = "fileserver"
 	// DefaultImage is the dufs image served when the config does not name one.
 	DefaultImage = "docker.io/sigoden/dufs:v0.46.0"
 	// reloadAfter bounds how stale the cached config can be. Changes of the
