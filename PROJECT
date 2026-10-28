@@ -11,7 +11,7 @@ resources:
     namespaced: true
   controller: true
   domain: wutz.dev
-  group: forgeai
+  group: fileserver
   kind: FileServer
   path: github.com/wutz/fileserver-operator/api/v1alpha1
   version: v1alpha1

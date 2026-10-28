@@ -77,7 +77,7 @@ docker-push: ## Push the manager image.
 
 HELM ?= helm
 CHART_DIR ?= charts/fileserver-operator
-CHART_VERSION ?= 0.1.0
+CHART_VERSION ?= 0.2.0
 CHART_REPO ?= oci://ghcr.io/wutz/charts
 
 .PHONY: helm-lint

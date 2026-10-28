@@ -27,7 +27,7 @@ const (
 	SecretName = "forgeai-fileserver"
 	// AnnotationLastActive is a client heartbeat on a FileServer (RFC3339).
 	// The file server runs while the heartbeat is recent.
-	AnnotationLastActive = "forgeai.wutz.dev/last-active"
+	AnnotationLastActive = "fileserver.wutz.dev/last-active"
 	// LabelTrash marks a PersistentVolumeClaim as trashed, with the value
 	// "true". Trashed volumes are not served.
 	LabelTrash = "forgeai.wutz.dev/trash"

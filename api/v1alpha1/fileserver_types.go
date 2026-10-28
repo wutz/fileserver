@@ -76,7 +76,7 @@ type FileServerStatus struct {
 // +kubebuilder:printcolumn:name="Last Active",type=date,JSONPath=`.status.lastActiveTime`
 
 // FileServer is an on-demand file transfer service (dufs) for the volumes of
-// a project. Clients wake it by updating the forgeai.wutz.dev/last-active
+// a project. Clients wake it by updating the fileserver.wutz.dev/last-active
 // annotation; it scales to zero after idleTimeout.
 type FileServer struct {
 	metav1.TypeMeta `json:",inline"`
